@@ -1,0 +1,41 @@
+<ion-header [translucent]="true" class="decoracion-header ion-text-center">
+  <ion-toolbar>
+    <ion-title>
+      <h1>RegistrAPP</h1>
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="openMenu()">
+        <ion-icon name="menu"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-menu side="end" contentId="main-content">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>{{ usuario }}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content [fullscreen]="true">
+    <ion-list>
+      <ion-item (click)="goToQr()">
+        <ion-label>Lector QR</ion-label>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+
+  <ion-footer>
+    <ion-item lines="none" class="logout-button" (click)="logout()">
+      <ion-label>Cerrar Sesión</ion-label>
+    </ion-item>
+  </ion-footer>
+</ion-menu>
+
+<ion-content [fullscreen]="true">
+  <div class="ion-padding ion-text-center">
+    <h2>Bienvenido {{ usuario }}</h2>
+  </div>
+</ion-content>
+<ion-router-outlet id="main-content"></ion-router-outlet>

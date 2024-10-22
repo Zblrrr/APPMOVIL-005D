@@ -1,0 +1,33 @@
+<ion-header [translucent]="true" class="ion-text-center ion-no-border decoracion-header">
+  <ion-toolbar>
+    <ion-title>
+      <h1>Restablecer</h1>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div>
+    <ion-list>
+      <div class="container2">
+        <ion-item>
+          <ion-input label="Usuario" labelPlacement="floating" placeholder="Ingresar usuario" [(ngModel)]="usuario"></ion-input>
+        </ion-item>
+
+        <ion-button color="warning" expand="full" (click)="validateUser()">Validar usuario</ion-button>
+    </div>
+
+      <div class="center-container" *ngIf="userValid">
+        <div class="bordered-box">
+          <ion-item>
+            <ion-input #nuevaContraseniaInput label="Nueva contraseña" labelPlacement="floating" type="password" placeholder="Nueva contraseña" [(ngModel)]="nuevaContrasenia"></ion-input>
+          </ion-item>
+          <ion-item>
+            <ion-input #repetirContraseniaInput label="Repetir contraseña" labelPlacement="floating" type="password" placeholder="Repetir nueva contraseña" [(ngModel)]="repetirContrasenia"></ion-input>
+          </ion-item>
+      
+          <ion-button #resetButton color="warning" expand="full" (click)="resetPassword()">Restablecer contraseña</ion-button>
+        </div>
+      </div>
+    </ion-list>
+  </div>

@@ -3,20 +3,19 @@ import { Barcode, BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
 import { AlertController } from '@ionic/angular';
 
 @Component({
-  selector: 'app-qr-test',
-  templateUrl: './qr-test.page.html',
-  styleUrls: ['./qr-test.page.scss'],
+  selector: 'app-qr',
+  templateUrl: './qr.page.html',
+  styleUrls: ['./qr.page.scss'],
 })
-export class QrTestPage implements OnInit {
+export class QrPage implements OnInit {
   isSupported = false;
   barcodes: Barcode[] = [];
 
-  constructor(
-    private alertController: AlertController
-  ) { }
+  constructor(private alertController: AlertController) {}
 
   ngOnInit() {
     BarcodeScanner.isSupported().then((result) => {
+      console.log('Barcode scanning supported:', result.supported);
       this.isSupported = result.supported;
     });
   }
