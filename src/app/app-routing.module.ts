@@ -12,8 +12,16 @@ const routes: Routes = [
     pathMatch: 'full'
   },
   {
-    path: 'qr-test',
-    loadChildren: () => import('./pages/qr-test/qr-test.module').then( m => m.QrTestPageModule)
+    path: 'qr',
+    loadChildren: () => import('./pages/qr/qr.module').then( m => m.QrPageModule)
+  },
+  {
+    path: 'index',
+    loadChildren: () => import('./pages/index/index.module').then( m => m.IndexPageModule)
+  },
+  {
+    path: 'restablecer',
+    loadChildren: () => import('./pages/restablecer/restablecer.module').then( m => m.RestablecerPageModule)
   },
 ];
 
