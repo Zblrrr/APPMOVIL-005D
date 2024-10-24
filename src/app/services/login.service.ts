@@ -15,6 +15,12 @@ export class LoginService {
     this.initializeUsers();
   }
 
+   // Método para validar si el usuario está logueado
+   async isLoggedIn(): Promise<boolean> {
+    const loggedInUser = await this.storageService.get(this.LOGGED_IN_USER_KEY);
+    return loggedInUser !== null; // Si hay un usuario almacenado, significa que está logueado
+  }
+
   private async initializeUsers() {
     const existingUsers = await this.storageService.get('users');
     if (!existingUsers) {

@@ -1,15 +1,13 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { GuardsService } from './services/guards.service';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 
 const routes: Routes = [
   {
     path: 'home',
-    loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule)
-  },
-  {
-    path: '',
-    redirectTo: 'home',
-    pathMatch: 'full'
+    loadChildren: () => import('./pages/home/home.module').then( m => m.HomePageModule),
+    canActivate: [GuardsService] // Protege el acceso a la página de login
   },
   {
     path: 'qr',
@@ -22,6 +20,10 @@ const routes: Routes = [
   {
     path: 'restablecer',
     loadChildren: () => import('./pages/restablecer/restablecer.module').then( m => m.RestablecerPageModule)
+  },
+  {
+    path: '**',
+    component: NotFoundComponent // Cualquier ruta no definida mostrará la página 404
   },
 ];
 
