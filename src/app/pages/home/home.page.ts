@@ -21,6 +21,11 @@ export class HomePage {
     private loginService: LoginService
   ) { }
 
+  ionViewWillEnter() {
+    // Reiniciar los campos de usuario y contraseña
+    this.resetFields();
+  }
+
   // Método de validación de login
   async validateLogin() {
     console.log("Ejecutando validación PAGE!");
@@ -61,5 +66,10 @@ export class HomePage {
     });
 
     await alert.present();
+  }
+
+  resetFields() {
+    this.usuario = ''; 
+    this.contrasenia = ''; 
   }
 }

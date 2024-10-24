@@ -9,6 +9,8 @@ import { AppRoutingModule } from './app-routing.module';
 import { IonicStorageModule } from '@ionic/storage-angular';
 import { StorageService } from './services/storage.service';
 import {provideHttpClient, withInterceptorsFromDi} from "@angular/common/http";
+import { NotFoundComponent } from './components/not-found/not-found.component';
+
 
 export function initApp(storageService: StorageService) {
   return () => storageService.init();
@@ -28,7 +30,7 @@ export function storageService() {
 }
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, NotFoundComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, IonicStorageModule.forRoot()],
   providers: [
     routeReuseStrategy(),
