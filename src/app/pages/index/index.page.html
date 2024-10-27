@@ -36,6 +36,16 @@
 <ion-content [fullscreen]="true">
   <div class="ion-padding ion-text-center">
     <h2>Bienvenido {{ usuario }}</h2>
+    <!-- Mostrar clima actual -->
+    <div *ngIf="climaActual">
+      <p>Temperatura actual: {{ climaActual?.current_weather?.temperature }}°C</p>
+      <p>Viento: {{ climaActual?.current_weather?.windspeed }} km/h</p>
+    </div>
+    <div *ngIf="!climaActual">
+      <ion-spinner name="crescent"></ion-spinner>
+      <p>Cargando clima...</p>
+    </div>
+    
   </div>
 </ion-content>
 <ion-router-outlet id="main-content"></ion-router-outlet>

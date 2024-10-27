@@ -4,6 +4,7 @@ import { App } from '@capacitor/app';
 import { AlertController, MenuController, Platform } from '@ionic/angular';
 import { LoginService } from 'src/app/services/login.service';
 import { StorageService } from 'src/app/services/storage.service';
+import { WeatherService } from 'src/app/services/weather.service';
 
 @Component({
   selector: 'app-index',
@@ -13,6 +14,7 @@ import { StorageService } from 'src/app/services/storage.service';
 export class IndexPage implements OnInit {
   usuario!: string | null;
   contrasenia: string = '';
+  climaActual: any;
 
   constructor(
     private router: Router,
@@ -20,7 +22,8 @@ export class IndexPage implements OnInit {
     private storageService: StorageService,
     private loginService: LoginService,
     private alertController: AlertController,
-    private platform: Platform
+    private platform: Platform,
+    private weatherService: WeatherService
   ) { 
     this.platform.backButton.subscribeWithPriority(10, () => {
       if (this.router.url === '/index') {
@@ -30,10 +33,20 @@ export class IndexPage implements OnInit {
   }
 
   async ngOnInit() {
-    // Obtener el usuario almacenado en el Storage
-    const loggedIn = this.usuario = await this.storageService.get('loggedInUser');
-    if (!loggedIn) {
-      this.router.navigate(['/home']);
+    try {
+      // Verificar si el usuario está logueado
+      const loggedIn = this.usuario = await this.storageService.get('loggedInUser');
+      if (!loggedIn) {
+        this.router.navigate(['/home']);
+      }
+  
+      // Solicitar y verificar los permisos de geolocalización
+      await this.weatherService.verificarPermisosUbicacion();
+      
+      // Obtener el clima actual
+      this.climaActual = await this.weatherService.obtenerClimaActual();
+    } catch (error) {
+      console.error('Error al iniciar el componente:', error);
     }
   }
 
