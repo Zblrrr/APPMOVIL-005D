@@ -1,0 +1,32 @@
+<ion-header class="decoracion-header ion-text-center">
+  <ion-toolbar>
+    <ion-title><h1>Mis asignaturas</h1></ion-title>
+    <ion-buttons slot="start">
+      <ion-button [routerLink]="['/index']">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-text class="header-text">
+    <h2>Asignaturas inscritas ({{ enrolledSubjectsCount }})</h2>
+  </ion-text>
+
+  <div class="subject-list">
+    <ion-card *ngFor="let subject of subjects" class="subject-card">
+      <ion-card-header>
+        <ion-card-title>{{ subject.name }}</ion-card-title>
+        <ion-card-subtitle>Código: {{ subject.code }}</ion-card-subtitle>
+      </ion-card-header>
+      
+      <ion-card-content>
+        <p>Accede a los detalles de asistencia para esta asignatura.</p>
+        <ion-button expand="block" (click)="goToDetail(subject.code)">
+          Ver asistencia
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

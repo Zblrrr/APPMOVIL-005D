@@ -1,0 +1,33 @@
+<ion-header class="decoracion-header ion-text-center">
+  <ion-toolbar>
+    <ion-title><h1>Detalles de Asignatura</h1></ion-title>
+    <ion-buttons slot="start">
+      <ion-button [routerLink]="['/asignaturas']">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>{{ subject.name }}</ion-card-title>
+      <ion-card-subtitle>Código: {{ subject.code }}</ion-card-subtitle>
+    </ion-card-header>
+    <ion-card-content>
+      <p>Asistencia registrada para esta asignatura:</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-list>
+    <ion-item *ngFor="let att of attendance">
+      <ion-label>{{ att.class }}</ion-label>
+      <ion-checkbox 
+        slot="end" 
+        [checked]="att.present" 
+        [disabled]="true">
+      </ion-checkbox>
+    </ion-item>
+  </ion-list>
+</ion-content>
