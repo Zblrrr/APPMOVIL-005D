@@ -59,6 +59,11 @@ export class IndexPage implements OnInit {
     this.router.navigate(['/qr']);
   }
 
+  goToAsignaturas() {
+    this.menu.close();
+    this.router.navigate(['/asignaturas']);
+  }
+
   // Confirmación antes de cerrar sesión
   async confirmLogout() {
     const alert = await this.alertController.create({

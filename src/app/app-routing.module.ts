@@ -22,6 +22,14 @@ const routes: Routes = [
     loadChildren: () => import('./pages/restablecer/restablecer.module').then( m => m.RestablecerPageModule)
   },
   {
+    path: 'asignaturas',
+    loadChildren: () => import('./pages/asignaturas/asignaturas.module').then( m => m.AsignaturasPageModule)
+  },
+  {
+    path: 'detalle-asignatura/:code',  // Ruta ajustada para aceptar el parámetro :code
+    loadChildren: () => import('./pages/detalle-asignatura/detalle-asignatura.module').then(m => m.DetalleAsignaturaPageModule)
+  },
+  {
     path: '**',
     component: NotFoundComponent // Cualquier ruta no definida mostrará la página 404
   },
