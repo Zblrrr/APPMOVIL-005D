@@ -1,6 +1,8 @@
 <ion-header class="decoracion-header ion-text-center">
   <ion-toolbar>
-    <ion-title><h1>Detalles de Asignatura</h1></ion-title>
+    <ion-title>
+      <h1>Detalles de Asignatura</h1>
+    </ion-title>
     <ion-buttons slot="start">
       <ion-button [routerLink]="['/asignaturas']">
         <ion-icon name="arrow-back"></ion-icon>
@@ -10,7 +12,12 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <ion-card>
+
+  <!-- Spinner para carga -->
+  <ion-spinner *ngIf="!subject" name="crescent" class="spinner-center"></ion-spinner>
+
+  <!-- Contenido principal -->
+  <ion-card *ngIf="subject">
     <ion-card-header>
       <ion-card-title>{{ subject.name }}</ion-card-title>
       <ion-card-subtitle>Código: {{ subject.code }}</ion-card-subtitle>
@@ -20,8 +27,9 @@
     </ion-card-content>
   </ion-card>
 
+  <!-- Lista de asistencia -->
   <ion-list>
-    <ion-item *ngFor="let att of attendance">
+    <ion-item *ngFor="let att of attendance; let i = index">
       <ion-label>{{ att.class }}</ion-label>
       <ion-checkbox 
         slot="end" 

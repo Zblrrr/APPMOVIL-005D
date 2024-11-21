@@ -15,7 +15,7 @@
   </ion-text>
 
   <div class="subject-list">
-    <ion-card *ngFor="let subject of subjects" class="subject-card">
+    <ion-card *ngFor="let subject of subjects" class="subject-card" button="false">
       <ion-card-header>
         <ion-card-title>{{ subject.name }}</ion-card-title>
         <ion-card-subtitle>Código: {{ subject.code }}</ion-card-subtitle>

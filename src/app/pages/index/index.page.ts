@@ -4,6 +4,7 @@ import { App } from '@capacitor/app';
 import { AlertController, MenuController, Platform } from '@ionic/angular';
 import { LoginService } from 'src/app/services/login.service';
 import { StorageService } from 'src/app/services/storage.service';
+import { SubjectsService } from 'src/app/services/subjects.service';
 import { WeatherService } from 'src/app/services/weather.service';
 
 @Component({
@@ -23,7 +24,8 @@ export class IndexPage implements OnInit {
     private loginService: LoginService,
     private alertController: AlertController,
     private platform: Platform,
-    private weatherService: WeatherService
+    private weatherService: WeatherService,
+    private subjectsService: SubjectsService,
   ) { 
     this.platform.backButton.subscribeWithPriority(10, () => {
       if (this.router.url === '/index') {
@@ -40,6 +42,9 @@ export class IndexPage implements OnInit {
         this.router.navigate(['/home']);
       }
   
+      // Inicializar asignaturas al cargar el index
+      await this.subjectsService.initializeSubjects();
+
       // Solicitar y verificar los permisos de geolocalización
       await this.weatherService.verificarPermisosUbicacion();
       
