@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "io.ionic.starter"
-        minSdkVersion 22
+        minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
@@ -40,9 +40,6 @@ dependencies {
     androidTestImplementation "androidx.test.ext:junit:$androidxJunitVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$androidxEspressoCoreVersion"
     implementation project(':capacitor-cordova-android-plugins')
-
-    // ML Kit Barcode Scanning
-    implementation 'com.google.mlkit:barcode-scanning:17.0.3'
 }
 
 apply from: 'capacitor.build.gradle'
