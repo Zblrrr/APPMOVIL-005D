@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Barcode, BarcodeScanner } from '@capacitor-mlkit/barcode-scanning';
-import { AlertController, NavController } from '@ionic/angular';
+import { BarcodeScanner, LensFacing } from '@capacitor-mlkit/barcode-scanning';
+import { BarcodeScanningModalComponent } from './barcode-scanning-modal.component';
+import { ModalController, Platform, ToastController } from '@ionic/angular';
+import { SubjectsService } from 'src/app/services/subjects.service';
 import { StorageService } from 'src/app/services/storage.service';
+import { Subject } from 'src/app/models/subject';
 
 @Component({
   selector: 'app-qr',
@@ -9,74 +12,94 @@ import { StorageService } from 'src/app/services/storage.service';
   styleUrls: ['./qr.page.scss'],
 })
 export class QrPage implements OnInit {
-  isSupported = false;
-  barcodes: Barcode[] = [];
+  scanResult = '';
   user: string | null = null;
 
   constructor(
-    private alertController: AlertController,
+    private modalController: ModalController,
+    private platform: Platform,
+    private subjectsService: SubjectsService,
     private storageService: StorageService,
-    private navController: NavController
+    private toastController: ToastController
   ) {}
 
-  async ngOnInit() {
-    // Verificar si el escáner es soportado en el dispositivo
-    const result = await BarcodeScanner.isSupported();
-    console.log('Barcode scanning supported:', result.supported);
-    this.isSupported = result.supported;
+  async ngOnInit(): Promise<void> {
+    if (this.platform.is('capacitor')) {
+      const permissions = await BarcodeScanner.checkPermissions();
+      if (!permissions.camera) {
+        await BarcodeScanner.requestPermissions();
+      }
+      BarcodeScanner.removeAllListeners();
+    }
 
-    // Obtener el usuario logueado para almacenar el escaneo bajo su ID
+    // Obtener usuario logueado
     this.user = await this.storageService.get('loggedInUser');
   }
 
-  async scan(): Promise<void> {
-    // Solicitar permisos de cámara
-    const granted = await this.requestPermissions();
-    if (!granted) {
-      this.presentAlert('Permiso denegado', 'Por favor otorga permisos de cámara para usar el escáner.');
+  async startScan() {
+    const modal = await this.modalController.create({
+      component: BarcodeScanningModalComponent,
+      cssClass: 'barcode-scanning-modal',
+      showBackdrop: false,
+      componentProps: {
+        formats: [], // Formatos permitidos
+        LensFacing: LensFacing.Back, // Cámara trasera
+      },
+    });
+
+    await modal.present();
+
+    const { data } = await modal.onWillDismiss();
+    if (data?.barcode?.displayValue) {
+      this.scanResult = data.barcode.displayValue;
+      this.processScanResult(this.scanResult);
+    }
+  }
+  
+  async processScanResult(scanResult: string): Promise<void> {
+    // Validar que el código QR tenga el formato esperado
+    if (!scanResult.includes('-')) {
+      this.showToast('Formato de código QR no válido.');
       return;
     }
-
-    try {
-      // Realizar el escaneo de código QR
-      const { barcodes } = await BarcodeScanner.scan(); 
-      
-      if (barcodes.length > 0) {
-        // Usar `rawValue` o el nombre correcto de la propiedad del contenido
-        const barcodeContent = barcodes[0].rawValue || barcodes[0].displayValue;
-        
-        if (barcodeContent) {
-          // Asumimos que el contenido del QR es "Clase X-CODIGO"
-          const [className, subjectCode] = barcodeContent.split('-');
-          
-          // Guardar el escaneo en StorageService para que lo use la página de detalle de asignatura
-          await this.storageService.set(`${this.user}_lastScan`, { className, subjectCode });
-          
-          // Mostrar alerta de éxito y navegar a la lista de asignaturas
-          this.presentAlert('Escaneo exitoso', `Clase: ${className}, Código: ${subjectCode}`);
-          this.navController.navigateBack('/asignaturas');
-        } else {
-          this.presentAlert('Código no válido', 'El código escaneado no contiene datos.');
-        }
-      }
-    } catch (error) {
-      console.error('Error al escanear el código de barras:', error);
-      this.presentAlert('Error', 'No se pudo escanear el código.');
+  
+    const [className, subjectCode] = scanResult.split('-');
+  
+    if (!className || !subjectCode) {
+      this.showToast('El código QR no contiene los datos esperados.');
+      return;
+    }
+  
+    // Buscar la asignatura correspondiente
+    const subject = await this.subjectsService.getSubjectByCode(subjectCode);
+    if (!subject) {
+      this.showToast(`No se encontró la asignatura con el código ${subjectCode}`);
+      return;
+    }
+  
+    // Buscar la clase en la lista de asistencia
+    const attendanceEntry = subject.attendance.find((att) => att.class === className);
+    if (!attendanceEntry) {
+      this.showToast(`No se encontró la clase ${className} en la asignatura ${subject.name}`);
+      return;
+    }
+  
+    // Registrar la asistencia si aún no ha sido marcada
+    if (!attendanceEntry.present) {
+      attendanceEntry.present = true;
+      await this.storageService.set('subjects', await this.subjectsService.getSubjects());
+      this.showToast(`Asistencia registrada para ${className} en ${subject.name}`);
+    } else {
+      this.showToast(`Ya se registró asistencia para ${className}`);
     }
   }
 
-  async requestPermissions(): Promise<boolean> {
-    // Solicitar permisos de cámara
-    const { camera } = await BarcodeScanner.requestPermissions();
-    return camera === 'granted' || camera === 'limited';
-  }
-
-  async presentAlert(header: string, message: string): Promise<void> {
-    const alert = await this.alertController.create({
-      header,
+  async showToast(message: string): Promise<void> {
+    const toast = await this.toastController.create({
       message,
-      buttons: ['OK'],
+      duration: 3000,
+      position: 'top',
     });
-    await alert.present();
+    await toast.present();
   }
 }

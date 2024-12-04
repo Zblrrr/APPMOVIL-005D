@@ -1,13 +1,32 @@
-.decoracion-header ion-toolbar{
+.body{
+    --ion-background-color: rgba(53, 53, 53, 1);
+}
+
+
+h1{
+    text-align: center;
+    color: #Ffff;
+    padding-top: 55px;
+
+}
+
+.img_box{
+   display: flex;
+   justify-content: center;
+   margin-top: 250px;
+ 
+}
+
+.decoracion-header ion-toolbar {
     --background: #0E3B66; 
     height: 55px;
     display: flex;
 }
 
 .decoracion-header h1 {
-    color: white;
+   color: white;
 }
 
-ion-icon{
+ion-icon {
     color: white;
 }
