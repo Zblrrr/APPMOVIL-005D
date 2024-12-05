@@ -26,7 +26,9 @@ export class LoginService {
     if (!existingUsers) {
       const initialUsers: User[] = [
         new User('admin', '123'),
-        new User('felipe', '1234')
+        new User('felipe', '123'),
+        new User('user', '123'),
+        new User('tester', '123'),
       ];
       await this.storageService.set('users', initialUsers); // Guardar usuarios iniciales
     }

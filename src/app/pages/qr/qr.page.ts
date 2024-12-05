@@ -57,6 +57,11 @@ export class QrPage implements OnInit {
   }
   
   async processScanResult(scanResult: string): Promise<void> {
+    if (!this.user) {
+      this.showToast('Usuario no logueado.');
+      return;
+    }
+  
     // Validar que el código QR tenga el formato esperado
     if (!scanResult.includes('-')) {
       this.showToast('Formato de código QR no válido.');
@@ -77,10 +82,21 @@ export class QrPage implements OnInit {
       return;
     }
   
-    // Buscar la clase en la lista de asistencia
-    const attendanceEntry = subject.attendance.find((att) => att.class === className);
+    // Inicializar la asistencia del usuario si no existe
+    if (!subject.attendance[this.user]) {
+      subject.attendance[this.user] = [];
+    }
+  
+    // Buscar la clase en la lista de asistencia del usuario
+    const attendanceEntry = subject.attendance[this.user].find(
+      (att) => att.class === className
+    );
+  
+    // Si no existe la clase, agregarla
     if (!attendanceEntry) {
-      this.showToast(`No se encontró la clase ${className} en la asignatura ${subject.name}`);
+      subject.attendance[this.user].push({ class: className, present: true });
+      await this.storageService.set('subjects', await this.subjectsService.getSubjects());
+      this.showToast(`Asistencia registrada para ${className} en ${subject.name}`);
       return;
     }
   
@@ -93,6 +109,7 @@ export class QrPage implements OnInit {
       this.showToast(`Ya se registró asistencia para ${className}`);
     }
   }
+  
 
   async showToast(message: string): Promise<void> {
     const toast = await this.toastController.create({

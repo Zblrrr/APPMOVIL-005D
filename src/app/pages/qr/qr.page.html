@@ -1,6 +1,6 @@
 <ion-header class="decoracion-header ion-text-center">
   <ion-toolbar>
-    <ion-title><h1>QR SCANNER</h1></ion-title>
+    <ion-title><h1>QR PAGE</h1></ion-title>
     <ion-buttons slot="start">
       <ion-button [routerLink]="['/index']">
         <ion-icon name="arrow-back"></ion-icon>
@@ -9,16 +9,18 @@
   </ion-toolbar>
 </ion-header>
 
-  <ion-content>
-  
-  <ion-button class="submit" (click)="startScan()" expand="block" fill="clear" shape="round">
-    SCAN 
-  </ion-button>
-  
-  <ion-item class="result" *ngIf="scanResult" lines="none">
-    <ion-label>scan result:</ion-label>
-    <p></p>
-    <div>{{scanResult}}</div>
-  </ion-item>
-  
-  </ion-content>
+<ion-content>
+  <!-- Contenedor para centrar contenido -->
+  <div class="center-content">
+    <!-- Botón para escanear -->
+    <ion-button class="submit" (click)="startScan()" expand="block" fill="clear" shape="round">
+      SCAN
+    </ion-button>
+
+    <!-- Resultado del escaneo -->
+    <ion-item class="result" *ngIf="scanResult" lines="none">
+      <ion-label>Scan result:</ion-label>
+      <div>{{ scanResult }}</div>
+    </ion-item>
+  </div>
+</ion-content>
